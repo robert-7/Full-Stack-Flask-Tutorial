@@ -1,9 +1,5 @@
-# This is a basic workflow to help you get started with Actions
-name: markdown-lint
-
-# Controls when the action will run. 
+name: lint
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
   push:
     branches: [ main ]
   pull_request:
@@ -14,12 +10,8 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "markdown-lint"
   markdown-lint:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
 
       # We usually want to check out the code as the first step in a Github Job
@@ -31,3 +23,24 @@ jobs:
         uses: avto-dev/markdown-lint@v1.5.0
         with:
           args: '*.md'
+          config: '.markdownlint.rb'
+
+  python-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8.9
+          architecture: x64
+      - name: Checkout PyTorch
+        uses: actions/checkout@master
+      - name: Install flake8
+        run: pip install flake8
+      - name: Run flake8
+        uses: suo/flake8-github-action@releases/v1
+        with:
+          checkName: 'python-lint'  # NOTE: this needs to be the same as the job name
+          config: .flake8
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
