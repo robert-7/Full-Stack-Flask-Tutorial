@@ -9,8 +9,10 @@ Postman.
 
 Please see [the setup documentation](SETUP.md) regarding this.
 
-## Repository Structure
+## Folder Structure
 
 * [.github/workflows](.github/workflows) - Holds the GitHub Actions files that enables
   CI/CD software workflows
+* [.vscode](.vscode) - Holds the Visual Studio Code settings for this project
+* [application](application) - Holds the application specific code for this project
 * [static](static) - Holds any static files that need to be sent over by the server
