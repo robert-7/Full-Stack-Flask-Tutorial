@@ -35,6 +35,19 @@ pre-commit install
 pre-commit run --all-files
 ```
 
+## Installing MongoDB
+
+Recommend installing docker first for WSL2 and then spinning up a container for this.
+Install following the installation commands
+[here](https://docs.docker.com/docker-for-windows/wsl/). Verify the install with:
+
+```bash
+which docker docker-compose
+```
+
+Then to set up a MongoDB container, simply run: `docker-compose up -d`. To bring down
+the container, run `docker-compose down -v`.
+
 ## Recurring
 
 To deactivate or reactivate your virtual environment, simply run:
