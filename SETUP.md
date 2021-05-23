@@ -45,8 +45,9 @@ Install following the installation commands
 which docker docker-compose
 ```
 
-Then to set up a MongoDB container, simply run: `docker-compose up -d`. To bring down
-the container, run `docker-compose down -v`.
+Then to set up a MongoDB container, simply run: `docker-compose up -d` and to hop into
+the container you can run `docker-compose exec mongodb bash`. To bring down the
+container, run `docker-compose down -v`.
 
 ## Recurring
 
