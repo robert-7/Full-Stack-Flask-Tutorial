@@ -46,8 +46,15 @@ which docker docker-compose
 ```
 
 Then to set up a MongoDB container, simply run: `docker-compose up -d` and to hop into
-the container you can run `docker-compose exec mongodb bash`. To bring down the
-container, run `docker-compose down -v`.
+the container and view the imported documents, run:
+
+```bash
+docker-compose exec mongodb bash
+mongo UTA_enrollment
+db.user.find()
+```
+
+To bring down the container, run `docker-compose down -v`.
 
 ## Recurring
 

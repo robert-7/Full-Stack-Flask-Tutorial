@@ -12,5 +12,16 @@ services:
     - 27017:27017
     restart: unless-stopped
 
+  mongo-seed:
+    image: mongo
+    container_name: mongo-setup
+    links:
+    - mongodb
+    volumes:
+    - ./mongo-setup:/mongo-setup:rw
+    command:
+      /mongo-setup/mongo-setup.sh
+
 volumes:
   mongodb:
+  mongo-setup:
