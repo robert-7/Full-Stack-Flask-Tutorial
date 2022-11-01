@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   mongodb:
-    image: mongo
+    image: mongo:5.0.13-focal
     container_name: mongodb
     environment:
     - PUID=1000
@@ -13,7 +13,7 @@ services:
     restart: unless-stopped
 
   mongo-seed:
-    image: mongo
+    image: mongo:5.0.13-focal
     container_name: mongo-setup
     links:
     - mongodb

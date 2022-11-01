@@ -102,7 +102,7 @@ def api(idx=None):
 
 
 class User(db.Document):
-    """???"""
+    """The class holding the User objects in our Mongo DB."""
 
     user_id = db.IntField(unique=True)
     first_name = db.StringField(max_length=50)

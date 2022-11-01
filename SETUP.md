@@ -37,7 +37,8 @@ pre-commit run --all-files
 
 ## Installing MongoDB
 
-Recommend installing docker first for WSL2 and then spinning up a container for this.
+Although the course instructs you to install MongoDB in your environment, I went down
+the route of installing docker first for WSL2 and then spinning up a container for this.
 Install following the installation commands
 [here](https://docs.docker.com/docker-for-windows/wsl/). Verify the install with:
 
@@ -50,7 +51,8 @@ the container and view the imported documents, run:
 
 ```bash
 docker-compose exec mongodb bash
-mongo UTA_enrollment
+mongo UTA_Enrollment
+db.getCollectionNames()
 db.user.find()
 ```
 
