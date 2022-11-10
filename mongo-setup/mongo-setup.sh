@@ -1,18 +1,26 @@
 #!/usr/bin/env bash
-echo "Setting up UTA_Enrollment db with user collection..."
-mongoimport --host mongodb \
-            --db UTA_Enrollment \
-            --collection user \
-            --type json \
-            --file /mongo-setup/users.json \
-            --jsonArray
-echo "Done setting user collection."
+HOST=mongodb            # Taken from docker-compose
+DB=UTA_Enrollment       # Taken from config.py
+MOUNT_PATH=/mongo-setup # Taken from docker-compose
 
-echo "Setting up UTA_Enrollment db with course collection... "
-mongoimport --host mongodb \
-            --db UTA_Enrollment \
-            --collection course \
+collection="user"
+json_file_path="${MOUNT_PATH}/users.json"
+echo "Setting up ${DB} db with user collection from ${json_file_path}..."
+mongoimport --host "${HOST}" \
+            --db "${DB}" \
+            --collection "${collection}" \
             --type json \
-            --file /mongo-setup/courses.json \
+            --file "${json_file_path}" \
             --jsonArray
-echo "Done setting course collection."
+echo "Done setting ${collection} collection."
+
+collection="course"
+json_file_path="${MOUNT_PATH}/courses.json"
+echo "Setting up ${DB} db with user collection from ${json_file_path}..."
+mongoimport --host "${HOST}" \
+            --db "${DB}" \
+            --collection "${collection}" \
+            --type json \
+            --file "${json_file_path}" \
+            --jsonArray
+echo "Done setting ${collection} collection."

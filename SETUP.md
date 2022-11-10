@@ -66,3 +66,10 @@ To deactivate or reactivate your virtual environment, simply run:
 deactivate                # deactivates virtualenv
 source .venv/bin/activate # reactivates virtualenv
 ```
+
+Then spin up the Flask server separately (hoping to incorporate this into the docker
+compose file):
+
+```shell
+flask run
+```

@@ -7,7 +7,7 @@ from flask import Response
 from flask import send_from_directory
 
 from application import app
-from application import db
+from application.models import User
 
 courseData = [
     {
@@ -99,16 +99,6 @@ def api(idx=None):
     else:
         jdata = courseData[int(idx)]
     return Response(json.dumps(jdata), mimetype="application/json")
-
-
-class User(db.Document):
-    """The class holding the User objects in our Mongo DB."""
-
-    user_id = db.IntField(unique=True)
-    first_name = db.StringField(max_length=50)
-    last_name = db.StringField(max_length=50)
-    email = db.StringField(max_length=40)
-    password = db.StringField(max_length=32)
 
 
 @app.route("/user")
