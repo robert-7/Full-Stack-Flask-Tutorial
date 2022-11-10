@@ -7,6 +7,10 @@ from flask import Response
 from flask import send_from_directory
 
 from application import app
+from application.forms import LoginForm
+from application.forms import RegisterForm  # noqa: F401
+from application.models import Course  # noqa: F401
+from application.models import Enrollment  # noqa: F401
 from application.models import User
 
 courseData = [
@@ -56,10 +60,11 @@ def index():
     return render_template("index.html", index=True)
 
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
     """Returns the login page content."""
-    return render_template("login.html", login=True)
+    form = LoginForm()
+    return render_template("login.html", title="Login", form=form, login=True)
 
 
 @app.route("/courses")
