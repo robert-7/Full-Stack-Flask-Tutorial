@@ -1,45 +1,19 @@
+---
 name: lint
-on:
+on:  # yamllint disable-line rule:truthy
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  markdown-lint:
+  pre-commit:
     runs-on: ubuntu-latest
     steps:
-
-      # We usually want to check out the code as the first step in a Github Job
-      - name: Check out code
-        uses: actions/checkout@v2
-
-      # We run the Markdown Linting Action as seen here: https://github.com/marketplace/actions/markdown-linting-action
-      - name: Markdown Linting Action
-        uses: avto-dev/markdown-lint@v1.5.0
-        with:
-          args: '*.md'
-          config: '.markdownlint.yaml'
-
-  python-lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Setup Python
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.10.8
-          architecture: x64
-      - name: Checkout PyTorch
-        uses: actions/checkout@master
-      - name: Install flake8
-        run: pip install flake8
-      - name: Run flake8
-        uses: suo/flake8-github-action@releases/v1
-        with:
-          checkName: 'python-lint'  # NOTE: this needs to be the same as the job name
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+      - uses: pre-commit/action@v3.0.0

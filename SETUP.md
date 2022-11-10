@@ -35,6 +35,29 @@ pre-commit install
 pre-commit run --all-files
 ```
 
+## Installing MongoDB
+
+Although the course instructs you to install MongoDB in your environment, I went down
+the route of installing docker first for WSL2 and then spinning up a container for this.
+Install following the installation commands
+[here](https://docs.docker.com/docker-for-windows/wsl/). Verify the install with:
+
+```bash
+which docker docker-compose
+```
+
+Then to set up a MongoDB container, simply run: `docker-compose up -d` and to hop into
+the container and view the imported documents, run:
+
+```bash
+docker-compose exec mongodb bash
+mongo UTA_Enrollment
+db.getCollectionNames()
+db.user.find()
+```
+
+To bring down the container, run `docker-compose down -v`.
+
 ## Recurring
 
 To deactivate or reactivate your virtual environment, simply run:
@@ -42,4 +65,11 @@ To deactivate or reactivate your virtual environment, simply run:
 ```bash
 deactivate                # deactivates virtualenv
 source .venv/bin/activate # reactivates virtualenv
+```
+
+Then spin up the Flask server separately (hoping to incorporate this into the docker
+compose file):
+
+```shell
+flask run
 ```

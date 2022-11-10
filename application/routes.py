@@ -7,6 +7,11 @@ from flask import Response
 from flask import send_from_directory
 
 from application import app
+from application.forms import LoginForm
+from application.forms import RegisterForm  # noqa: F401
+from application.models import Course  # noqa: F401
+from application.models import Enrollment  # noqa: F401
+from application.models import User
 
 courseData = [
     {
@@ -55,10 +60,11 @@ def index():
     return render_template("index.html", index=True)
 
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
     """Returns the login page content."""
-    return render_template("login.html", login=True)
+    form = LoginForm()
+    return render_template("login.html", title="Login", form=form, login=True)
 
 
 @app.route("/courses")
@@ -98,6 +104,27 @@ def api(idx=None):
     else:
         jdata = courseData[int(idx)]
     return Response(json.dumps(jdata), mimetype="application/json")
+
+
+@app.route("/user")
+def user():
+    """???"""
+    # User(
+    #     user_id=1,
+    #     first_name="Christian",
+    #     last_name="Hur",
+    #     email="christian@uta.com",
+    #     password="abc1234",
+    # ).save()
+    # User(
+    #     user_id=2,
+    #     first_name="Mary",
+    #     last_name="Jane",
+    #     email="mary.jane@uta.com",
+    #     password="password123",
+    # ).save()
+    users = User.objects.all()
+    return render_template("user.html", users=users)
 
 
 @app.route("/favicon.ico")

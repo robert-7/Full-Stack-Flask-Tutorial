@@ -15,7 +15,7 @@ Please see [the setup documentation](SETUP.md) regarding this.
   CI/CD software workflows
 * [.vscode](.vscode) - Holds the Visual Studio Code settings for this project
 * [application](application) - Holds the application specific code for this project
-
+* [mongo-setup](mongo-setup) - Holds the files needed to populate our MongoDB instance
 * [.flake8](.flake8) - Configuration file for the flake8 Python linter
 * [.flaskenv](.flaskenv) - Defines some parameters that Flask needs to run
 * [.gitignore](.gitignore) - Defines the files/folders to ignore in this repository
