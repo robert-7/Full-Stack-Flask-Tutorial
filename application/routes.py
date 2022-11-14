@@ -1,6 +1,8 @@
 import os
 
+from flask import flash
 from flask import json
+from flask import redirect
 from flask import render_template
 from flask import request
 from flask import Response
@@ -64,6 +66,15 @@ def index():
 def login():
     """Returns the login page content."""
     form = LoginForm()
+    if form.validate_on_submit():
+        email = form.email.data
+        password = form.password.data
+        user = User.objects(email=email).first()
+        if user and user.get_password(password):
+            flash("You are successfully logged in!", "success")
+            return redirect("/index")
+        else:
+            flash("Sorry, something went wrong.", "danger")
     return render_template("login.html", title="Login", form=form, login=True)
 
 
