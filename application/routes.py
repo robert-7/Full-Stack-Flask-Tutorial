@@ -94,7 +94,7 @@ def register():
     form = RegisterForm()
     if form.validate_on_submit():
         user_id = User.objects.count()
-        app.logger.info("ROBER - %s - the number of users", user_id)
+        app.logger.info("ROBERT - %s - the number of users", user_id)
         user_id += 1
         email = form.email.data
         password = form.password.data
