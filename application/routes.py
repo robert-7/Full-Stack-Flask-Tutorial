@@ -16,6 +16,7 @@ from application.models import Course  # noqa: F401
 from application.models import Enrollment  # noqa: F401
 from application.models import User
 
+# TODO: this should be removed, but it's still being read in
 courseData = [
     {
         "courseID": "1111",
@@ -81,11 +82,13 @@ def login():
 
 @app.route("/courses")
 @app.route("/courses/<term>")
-def courses(term="Spring 2019"):
+def courses(term=None):
     """Returns the courses page content."""
-    return render_template(
-        "courses.html", courseData=courseData, courses=True, term=term
-    )
+    if term is None:
+        term = "Spring 2019"
+    # "+courseID" denotes sorting in increasing order by courseID
+    classes = Course.objects.order_by("+courseID")
+    return render_template("courses.html", courseData=classes, courses=True, term=term)
 
 
 @app.route("/register", methods=["POST", "GET"])
@@ -123,6 +126,7 @@ def enrollment():
     )
 
 
+# TODO: What is this? Remove this when you're done.
 @app.route("/api")
 @app.route("/api/<idx>")
 def api(idx=None):

@@ -24,7 +24,7 @@ class User(db.Document):
 class Course(db.Document):
     """The model for holding the Course objects in our Mongo DB."""
 
-    course_id = db.StringField(max_length=10, unique=True)
+    courseID = db.StringField(max_length=10, unique=True)
     title = db.StringField(max_length=100)
     description = db.StringField(max_length=255)
     credits = db.IntField()
@@ -35,4 +35,4 @@ class Enrollment(db.Document):
     """The model for holding the mapping between Users and Courses."""
 
     user_id = db.IntField()
-    course_id = db.StringField(max_length=10)
+    courseID = db.StringField(max_length=10)
