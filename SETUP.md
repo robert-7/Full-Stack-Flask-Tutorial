@@ -43,14 +43,19 @@ Install following the installation commands
 [here](https://docs.docker.com/docker-for-windows/wsl/). Verify the install with:
 
 ```bash
-which docker docker-compose
+which docker
 ```
 
-Then to set up a MongoDB container, simply run: `docker-compose up -d` and to hop into
-the container and view the imported documents, run:
+Then to set up a MongoDB container, simply run:
 
 ```bash
-docker-compose exec mongodb bash
+docker compose up -d
+```
+
+To hop into the `mongodb` container and view the imported documents, run:
+
+```bash
+docker compose exec mongodb bash
 mongo UTA_Enrollment
 db.getCollectionNames()
 db.user.find()

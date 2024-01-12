@@ -9,6 +9,12 @@ Postman.
 
 Please see [the setup documentation](SETUP.md) regarding this.
 
+## Features to try
+
+* You should be able to register a user. This can be done from the `/register` path.
+* You should be able to login as a user after registering. This can be done from the
+  `/login` path.
+
 ## Folder and File Structure
 
 * [.github/workflows](.github/workflows) - Holds the GitHub Actions files that enables
