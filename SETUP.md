@@ -55,13 +55,20 @@ docker compose up -d
 To hop into the `mongodb` container and view the imported documents, run:
 
 ```bash
-docker compose exec mongodb bash
-mongo UTA_Enrollment
+# hop into our mongodb container, and begin a mongo shell with the UTA_Enrollment db selected
+docker compose exec mongodb mongo UTA_Enrollment
 db.getCollectionNames()
 db.user.find()
 ```
 
 To bring down the container, run `docker-compose down -v`.
+
+## Install Mongo Compass
+
+Unfortunately, for the time being, there are some steps that require Mongo Compass
+(running on Windows, for me as a WSL2 user). As of writing this,
+[mongodb-compass-1.41.0](https://downloads.mongodb.com/compass/mongodb-compass-1.41.0-win32-x64.exe)
+is the latest version.
 
 ## Recurring
 

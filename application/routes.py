@@ -16,6 +16,8 @@ from application.models import Course  # noqa: F401
 from application.models import Enrollment  # noqa: F401
 from application.models import User
 
+# TODO: We should be using global strings within flash() functions
+
 # TODO: this should be removed, but it's still being read in
 courseData = [
     {
@@ -116,13 +118,63 @@ def register():
 @app.route("/enrollment", methods=["GET", "POST"])
 def enrollment():
     """Returns the enrollment page content."""
-    id = request.form.get("courseID")
-    title = request.form.get("title")
-    term = request.form.get("term")
+    courseID = request.form.get("courseID")
+    courseTitle = request.form.get("title")
+    # TODO: This should be fetched from a session variable
+    user_id = 1
+
+    # we check if we're coming from the course page here
+    # if there's a courseID, it means we're enrolling in a course
+    if courseID:
+        if Enrollment.objects(user_id=user_id, courseID=courseID):
+            flash(
+                f"Oops! You are already registered in course {courseTitle}!",
+                "danger",
+            )
+            return redirect(url_for("courses"))
+        else:
+            enrollment = Enrollment(user_id=user_id, courseID=courseID)
+            enrollment.save()
+            flash(f"You are enrolled in {courseTitle}!", "success")
+
+    classes = list(
+        User.objects.aggregate(
+            *[
+                {
+                    "$lookup": {
+                        "from": "enrollment",
+                        "localField": "user_id",
+                        "foreignField": "user_id",
+                        "as": "r1",
+                    }
+                },
+                {
+                    "$unwind": {
+                        "path": "$r1",
+                        "includeArrayIndex": "r1_id",
+                        "preserveNullAndEmptyArrays": False,
+                    }
+                },
+                {
+                    "$lookup": {
+                        "from": "course",
+                        "localField": "r1.courseID",
+                        "foreignField": "courseID",
+                        "as": "r2",
+                    }
+                },
+                {"$unwind": {"path": "$r2", "preserveNullAndEmptyArrays": False}},
+                {"$match": {"user_id": user_id}},
+                {"$sort": {"courseID": 1}},
+            ]
+        )
+    )
+
     return render_template(
         "enrollment.html",
         enrollment=True,
-        data={"id": id, "title": title, "term": term},
+        title="Enrollment",
+        classes=classes,
     )
 
 
