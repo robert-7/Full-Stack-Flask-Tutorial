@@ -66,7 +66,6 @@ courseData = [
 
 @api.route("/api", "/api/")
 class GetAndPost(Resource):
-
     # GET all
     def get(self):
         return jsonify(User.objects.all())
@@ -89,7 +88,6 @@ class GetAndPost(Resource):
 
 @api.route("/api/<idx>")
 class GetUpdateDelete(Resource):
-
     # GET one
     def get(self, idx):
         return jsonify(User.objects(user_id=idx))
