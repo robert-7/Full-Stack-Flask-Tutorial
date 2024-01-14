@@ -1,15 +1,18 @@
 import os
 
 from flask import flash
-from flask import json
+from flask import jsonify
 from flask import redirect
 from flask import render_template
 from flask import request
-from flask import Response
 from flask import send_from_directory
+from flask import session
 from flask import url_for
+from flask_restx import Resource
 
+from application import api
 from application import app
+from application.course_list import course_list_for_user
 from application.forms import LoginForm
 from application.forms import RegisterForm
 from application.models import Course  # noqa: F401
@@ -58,6 +61,54 @@ courseData = [
 ]
 
 
+###################################################
+
+
+@api.route("/api", "/api/")
+class GetAndPost(Resource):
+    # GET all
+    def get(self):
+        return jsonify(User.objects.all())
+
+    # POST all
+    def post(self):
+        data = api.payload
+        user = User(
+            user_id=data["user_id"],
+            email=data["email"],
+            first_name=data["first_name"],
+            last_name=data["last_name"],
+        )
+        # TODO: This is insecure. We should check to see if the user exists before
+        # trying to create them.
+        user.set_password(data["password"])
+        user.save()
+        return jsonify(User.objects(user_id=data["user_id"]))
+
+
+@api.route("/api/<idx>")
+class GetUpdateDelete(Resource):
+    # GET one
+    def get(self, idx):
+        return jsonify(User.objects(user_id=idx))
+
+    # PUT one
+    def put(self, idx):
+        data = api.payload
+        user = User.objects(user_id=idx)
+        user.update(**data)
+        return jsonify(User.objects(user_id=idx))
+
+    # DELETE one
+    def delete(self, idx):
+        user = User.objects(user_id=idx)
+        user.delete()
+        return jsonify("User is deleted!")
+
+
+###################################################
+
+
 @app.route("/")
 @app.route("/home")
 @app.route("/index")
@@ -69,6 +120,9 @@ def index():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Returns the login page content."""
+    if session.get("username"):
+        return redirect(url_for("index"))
+
     form = LoginForm()
     if form.validate_on_submit():
         email = form.email.data
@@ -76,10 +130,19 @@ def login():
         user = User.objects(email=email).first()
         if user and user.get_password(password):
             flash("You are successfully logged in!", "success")
+            session["user_id"] = user.user_id
+            session["username"] = user.first_name
             return redirect("/index")
         else:
             flash("Sorry, something went wrong.", "danger")
     return render_template("login.html", title="Login", form=form, login=True)
+
+
+@app.route("/logout")
+def logout():
+    session["user_id"] = False
+    session.pop("username", None)
+    return redirect(url_for("index"))
 
 
 @app.route("/courses")
@@ -88,7 +151,7 @@ def courses(term=None):
     """Returns the courses page content."""
     if term is None:
         term = "Spring 2019"
-    # "+courseID" denotes sorting in increasing order by courseID
+    # Note: "+courseID" denotes sorting in increasing order by courseID
     classes = Course.objects.order_by("+courseID")
     return render_template("courses.html", courseData=classes, courses=True, term=term)
 
@@ -96,6 +159,8 @@ def courses(term=None):
 @app.route("/register", methods=["POST", "GET"])
 def register():
     """Returns the registration page content."""
+    if session.get("username"):
+        return redirect(url_for("index"))
     form = RegisterForm()
     if form.validate_on_submit():
         user_id = User.objects.count()
@@ -118,10 +183,12 @@ def register():
 @app.route("/enrollment", methods=["GET", "POST"])
 def enrollment():
     """Returns the enrollment page content."""
+    if not session.get("username"):
+        return redirect(url_for("login"))
+
     courseID = request.form.get("courseID")
     courseTitle = request.form.get("title")
-    # TODO: This should be fetched from a session variable
-    user_id = 1
+    user_id = session.get("user_id")
 
     # we check if we're coming from the course page here
     # if there's a courseID, it means we're enrolling in a course
@@ -137,76 +204,18 @@ def enrollment():
             enrollment.save()
             flash(f"You are enrolled in {courseTitle}!", "success")
 
-    classes = list(
-        User.objects.aggregate(
-            *[
-                {
-                    "$lookup": {
-                        "from": "enrollment",
-                        "localField": "user_id",
-                        "foreignField": "user_id",
-                        "as": "r1",
-                    }
-                },
-                {
-                    "$unwind": {
-                        "path": "$r1",
-                        "includeArrayIndex": "r1_id",
-                        "preserveNullAndEmptyArrays": False,
-                    }
-                },
-                {
-                    "$lookup": {
-                        "from": "course",
-                        "localField": "r1.courseID",
-                        "foreignField": "courseID",
-                        "as": "r2",
-                    }
-                },
-                {"$unwind": {"path": "$r2", "preserveNullAndEmptyArrays": False}},
-                {"$match": {"user_id": user_id}},
-                {"$sort": {"courseID": 1}},
-            ]
-        )
-    )
-
+    courses = course_list_for_user(user_id)
     return render_template(
         "enrollment.html",
         enrollment=True,
         title="Enrollment",
-        classes=classes,
+        classes=courses,
     )
-
-
-# TODO: What is this? Remove this when you're done.
-@app.route("/api")
-@app.route("/api/<idx>")
-def api(idx=None):
-    """Returns the course data as a JSON object."""
-    if idx is None:
-        jdata = courseData
-    else:
-        jdata = courseData[int(idx)]
-    return Response(json.dumps(jdata), mimetype="application/json")
 
 
 @app.route("/user")
 def user():
-    """???"""
-    # User(
-    #     user_id=1,
-    #     first_name="Christian",
-    #     last_name="Hur",
-    #     email="christian@uta.com",
-    #     password="abc1234",
-    # ).save()
-    # User(
-    #     user_id=2,
-    #     first_name="Mary",
-    #     last_name="Jane",
-    #     email="mary.jane@uta.com",
-    #     password="password123",
-    # ).save()
+    """Returns the users in our database."""
     users = User.objects.all()
     return render_template("user.html", users=users)
 
