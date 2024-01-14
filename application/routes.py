@@ -12,6 +12,7 @@ from flask_restx import Resource
 
 from application import api
 from application import app
+from application.course_list import course_list_for_user
 from application.forms import LoginForm
 from application.forms import RegisterForm
 from application.models import Course  # noqa: F401
@@ -152,7 +153,7 @@ def courses(term=None):
     """Returns the courses page content."""
     if term is None:
         term = "Spring 2019"
-    # "+courseID" denotes sorting in increasing order by courseID
+    # Note: "+courseID" denotes sorting in increasing order by courseID
     classes = Course.objects.order_by("+courseID")
     return render_template("courses.html", courseData=classes, courses=True, term=term)
 
@@ -205,64 +206,18 @@ def enrollment():
             enrollment.save()
             flash(f"You are enrolled in {courseTitle}!", "success")
 
-    classes = list(
-        User.objects.aggregate(
-            *[
-                {
-                    "$lookup": {
-                        "from": "enrollment",
-                        "localField": "user_id",
-                        "foreignField": "user_id",
-                        "as": "r1",
-                    }
-                },
-                {
-                    "$unwind": {
-                        "path": "$r1",
-                        "includeArrayIndex": "r1_id",
-                        "preserveNullAndEmptyArrays": False,
-                    }
-                },
-                {
-                    "$lookup": {
-                        "from": "course",
-                        "localField": "r1.courseID",
-                        "foreignField": "courseID",
-                        "as": "r2",
-                    }
-                },
-                {"$unwind": {"path": "$r2", "preserveNullAndEmptyArrays": False}},
-                {"$match": {"user_id": user_id}},
-                {"$sort": {"courseID": 1}},
-            ]
-        )
-    )
-
+    courses = course_list_for_user(user_id)
     return render_template(
         "enrollment.html",
         enrollment=True,
         title="Enrollment",
-        classes=classes,
+        classes=courses,
     )
 
 
 @app.route("/user")
 def user():
-    """???"""
-    # User(
-    #     user_id=1,
-    #     first_name="Christian",
-    #     last_name="Hur",
-    #     email="christian@uta.com",
-    #     password="abc1234",
-    # ).save()
-    # User(
-    #     user_id=2,
-    #     first_name="Mary",
-    #     last_name="Jane",
-    #     email="mary.jane@uta.com",
-    #     password="password123",
-    # ).save()
+    """Returns the users in our database."""
     users = User.objects.all()
     return render_template("user.html", users=users)
 
