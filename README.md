@@ -19,6 +19,7 @@ Please see [the setup documentation](SETUP.md) regarding this.
 
 * [.github/workflows](.github/workflows) - Holds the GitHub Actions files that enables
   CI/CD software workflows
+* [.postman](.postman) - Holds files related to Postman setup for API testing
 * [.vscode](.vscode) - Holds the Visual Studio Code settings for this project
 * [application](application) - Holds the application specific code for this project
 * [mongo-setup](mongo-setup) - Holds the files needed to populate our MongoDB instance
