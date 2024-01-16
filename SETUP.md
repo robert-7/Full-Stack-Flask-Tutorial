@@ -85,3 +85,8 @@ compose file):
 ```shell
 flask run
 ```
+
+## Install and Setup Postman
+
+After you've installed Postman on your computer, import
+[the Postman collection](.postman/collection.json) to have have the full API setup.
