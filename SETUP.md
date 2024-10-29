@@ -5,7 +5,15 @@ The steps below are should help you get set up on an Ubuntu system.
 ```bash
 # install python 3 and dependencies
 sudo apt update
-sudo apt install build-essential libssl-dev libffi-dev python3 python-dev python3-pip python3-venv
+sudo apt install -y \
+    build-essential \
+    libffi-dev \
+    libssl-dev \
+    hadolint \
+    python3 \
+    python-dev \
+    python3-pip \
+    python3-venv
 
 # ensure python 3 is the default python version
 cat >> ~/.bashrc << EOF
@@ -49,6 +57,7 @@ which docker
 Then to set up a MongoDB container, simply run:
 
 ```bash
+docker compose build
 docker compose up -d
 ```
 
