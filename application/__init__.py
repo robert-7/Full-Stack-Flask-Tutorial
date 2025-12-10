@@ -1,5 +1,5 @@
+import mongoengine
 from flask import Flask
-from flask_mongoengine import MongoEngine
 from flask_restx import Api
 
 from config import Config
@@ -9,8 +9,10 @@ app = Flask(__name__)
 app.config.from_object(Config)
 
 # initiate the mongo engine
-db = MongoEngine()
-db.init_app(app)
+mongoengine.connect(
+    db=app.config["MONGODB_SETTINGS"]["db"],
+    host=app.config["MONGODB_SETTINGS"]["host"],
+)
 
 # initiate the API
 api = Api()
