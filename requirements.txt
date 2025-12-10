@@ -1,9 +1,5 @@
-# NOTE: upgrading Flask past 2.2.5 causes issues with flask-mongoengine
-# since Flask 3.0 completely removed the JSONEncoder class
-# which flask-mongoengine (version 1.0.0) still relies on this removed class
-# to handle JSON serialization for MongoDB objects.
-Flask==2.2.5
-flask-mongoengine==1.0.0
+email-validator==2.3.0
+Flask==3.1.2
 flask-restx==1.3.2
 Flask-WTF==1.2.2
 itsdangerous==2.2.0
@@ -11,7 +7,7 @@ Jinja2==3.1.6
 MarkupSafe==3.0.3
 mongoengine==0.29.1
 pre-commit==4.5.0
-pymongo==4.15.5
+pymongo>=4.0
 python-dotenv==1.2.1
 Werkzeug==3.1.4
 WTForms==3.2.1

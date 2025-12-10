@@ -1,8 +1,7 @@
 import flask  # noqa: F401
+import mongoengine as db
 from werkzeug.security import check_password_hash
 from werkzeug.security import generate_password_hash
-
-from application import db
 
 
 class User(db.Document):
