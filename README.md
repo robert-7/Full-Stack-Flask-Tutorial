@@ -38,3 +38,4 @@ Please see [the setup documentation](SETUP.md) regarding this.
 * [requirements.txt](requirements.txt) - Pip package requirements for enabling
   developers to contribute. See [SETUP.md](SETUP.md)
 * [SETUP.md](SETUP.md) - Setup instructions for contributors
+* [TESTING.md](TESTING.md) - Instructions for manually validating the website functionality works.
