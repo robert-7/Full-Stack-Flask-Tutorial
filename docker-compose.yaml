@@ -14,7 +14,7 @@ services:
       - mongodb
 
   mongodb:
-    image: mongo:8.2.2
+    image: mongo:8.2
     container_name: mongodb
     environment:
       - PUID=1000
@@ -26,7 +26,7 @@ services:
     restart: unless-stopped
 
   mongo-seed:
-    image: mongo:8.2.2
+    image: mongo:8.2
     container_name: mongo-setup
     links:
       - mongodb
